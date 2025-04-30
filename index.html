@@ -1,285 +1,249 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" id="top">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>クラブ＆バー</title>
   <style>
-    /* ========== 全体スタイル ========== */
+    /* ページ全体の背景 */
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      background-color: #000; /* 背景は黒 */
-      color: #fff;
-      text-align: center;
+      background: url('bg.png');
+      color: #FFFFFF;
+      font-family: "Noto Serif JP","Playfair Display",serif;
+      overflow-x: hidden;
     }
 
-    /* ========== ヘッダー部分 ========== */
-    .header {
+    /* 左上ロゴA */
+    .top-logo {
       position: relative;
-      background: url('sample1.png') no-repeat center top/cover;
-      height: 50vh; /* 高さは画面の半分 */
-    }
-    .header::after {
-      content: "";
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 100px;
-      background: #000;
-      border-radius: 50% 50% 0 0;
-    }
-
-    /* ハンバーガーメニューボタン（固定） */
-    .menu-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      font-size: 2rem;
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      z-index: 999;
+      margin: 0;
+      margin-left: 4.3%;
+      width: 20.3%;
+      z-index: 100;
     }
 
     /* ハンバーガーメニュー */
+    .hamburger-container {
+      position: fixed;
+      top: 0; right: 0;
+      width: 71px; height: 71px;
+      background: transparent;
+      z-index: 999;
+      cursor: pointer;
+    }
+    .hamburger-container .line1,
+    .hamburger-container .line2 {
+      position: absolute;
+      left: calc((71px - 42px)/2);
+      width: 42px; height: 1px;
+      background: #ffffff;
+    }
+    .hamburger-container .line1 { top: 23px; }
+    .hamburger-container .line2 { top: 37px; }
+    .hamburger-container .menu-text {
+      position: absolute;
+      bottom: 7px;
+      left: calc((71px - 42px)/2);
+      width: 42px;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: .1em;
+      color: #ffffff;
+      margin: 0; padding: 0;
+    }
+
+    /* オーバーレイメニュー */
     #menu {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.95);
-      justify-content: center;
-      flex-direction: column;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.95);
       z-index: 1000;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     #menu a {
-      color: #fff;
+      color: #ffffff;
+      font-size: 2rem;
       text-decoration: none;
-      font-size: 1.5rem;
-      margin: 15px;
+      margin: 15px 0;
     }
     .close-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-    }
-
-    /* ========== メインコンテンツ部分 ========== */
-    .content {
-      background-color: #000;
-      position: relative;
-      margin-top: -50px;
-      padding-top: 60px;
-      border-radius: 50px 50px 0 0;
-    }
-
-    h1 {
+      top: 20px; right: 20px;
       font-size: 3rem;
-      margin-bottom: 20px;
+      color: #ffffff;
+      cursor: pointer;
     }
 
-    /* ダーツメーター全体 */
-    .dart-container {
+    /* スクロールされる画像 */
+    .scroll-container {
       position: relative;
-      width: 120px; 
-      height: 120px;
-      margin: 20px auto;
+      width: 100%;
+      height: 435px;
+      overflow: hidden;
+      margin: 0; padding: 0;
+      z-index: 50;
     }
-    /* ダーツバレル本体 */
-    #dart {
-      position: absolute;
-      width: 120px;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
-      transform-origin: 50% 90%;
-      transition: transform 1s ease;
-    }
-
-    /* ========== 文字の配置（回転しない） ========== */
-    .dart-label {
-      position: absolute;
-      font-size: 1rem;
-      color: #fff;
-      white-space: nowrap;
-    }
-    /* やや混雑: 真上（中心から50px上） */
-    #label-yaya {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) translate(0, -50px);
-    }
-    /* 満員: やや混雑から反時計回り45度 → (x=-35px, y=-35px) */
-    #label-manin {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) translate(-35px, -35px);
-    }
-    /* 予約不要: やや混雑から時計回り45度 → (x=35px, y=-35px) */
-    #label-yoyaku {
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) translate(35px, -35px);
-    }
-
-    /* 予約ボタン */
-    .reserve-btn {
-      border: 2px solid #fff;
-      background: none;
-      color: #fff;
-      padding: 10px 30px;
-      font-size: 1.2rem;
-      margin: 20px auto;
-      cursor: pointer;
-    }
-
-    /* 企画場所 */
-    .location {
-      margin-bottom: 20px;
-      font-size: 1rem;
-      color: #bbb;
-    }
-
-    /* 区切り線 */
-    .divider {
-      width: 80%;
-      margin: 30px auto;
-      border: 0.5px solid #fff;
-    }
-
-    /* ランキング＆ゲームボタン */
-    .game-section {
+    .scroll-track {
       display: flex;
-      justify-content: center;
-      align-items: stretch;
-      gap: 20px;
-      margin: 30px auto;
-      width: 80%;
-      max-width: 800px;
+      animation: scroll-left 60s linear infinite;
     }
-    .ranking, .game-btn {
+    .scroll-item {
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+    .scroll-item img {
+      height: 435px;
+      width: auto;
+      display: block;
+    }
+    @keyframes scroll-left {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-1800px); }
+    }
+
+    /* ABOUT セクション */
+    .about-section {
+      position: absolute;
+      top: 100dvh;
+      left: 0; width: 100%;
+      padding: 6vw 5vw 8vw;
+      background: url('bg.png');
+      background-size: cover;
+      background-position: center;
+      box-sizing: border-box;
+      z-index: 70;
+    }
+    .about-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .about-en {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(20px,4vw,34px);
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: #90a1a6;
+      margin: 0 0 1.5rem;
+      line-height: 1;
+    }
+    .about-lead {
+      font-size: clamp(22px,4.5vw,36px);
+      line-height: 1.4;
+      font-weight: 600;
+      margin: 0 0 2rem;
+      color: #FFFFFF;
+    }
+    .about-desc {
+      font-size: clamp(15px,3.2vw,20px);
+      line-height: 1.9;
+      margin: 0;
+      color: #FFFFFF;
+    }
+    .sp-only { display: none; }
+    @media (max-width: 768px) {
+      .sp-only { display: inline; }
+    }
+
+    /* 整理券番号表示（背景を透過に変更） */
+    #ticketDisplay {
+      position: absolute;
+      top: 435px;
+      left: 5vw; right: 5vw;
+      height: calc(100dvh - 435px);
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      min-height: 200px;
-      border-radius: 10px;
-    }
-    .ranking {
-      background-color: rgba(255,255,255,0.1);
-      flex: 1;
-      padding: 20px;
-    }
-    .ranking h2 {
-      margin-top: 0;
-    }
-    .game-btn {
-      width: 120px; 
-      height: 120px;
-      background: url('sample4.png') no-repeat center/cover;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      border-radius: 10px;
-      flex-shrink: 0; 
-      font-size: 1rem;
+      justify-content: center;
+      font-size: 2rem;
+      background: none;
+      color: #ffffff;
+      z-index: 60;
     }
 
-    /* ニュース欄 */
-    .news {
-      margin: 30px auto;
-      width: 80%;
-      max-width: 800px;
-      background-color: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 20px;
+    /* ファーストビュー文字 */
+    .firstview-text {
+      position: absolute;
+      left: 4.3vw; bottom: 0;
+      font-size: 10px;
+      line-height: 1.5;
+      color: #7f7f7f;
+      margin: 0; padding: 0;
     }
 
-    /* フッター */
-    footer {
-      background: #222;
-      padding: 20px;
-      margin-top: 30px;
-    }
-    footer a {
-      color: #fff;
-      text-decoration: none;
-      margin: 0 10px;
+    /* 中央ロゴB */
+    .logo {
+      position: absolute;
+      width: 29.3vw;
+      height: 25.784vw;
+      left: 35.35vw;
+      top: calc(217.5px + 6.206vw);
+      background: url('logoB.png') no-repeat center/cover;
+      z-index: 9999;
     }
   </style>
 </head>
-<body>
-
-  <!-- ヘッダー -->
-  <div class="header"></div>
-
-  <!-- ハンバーガーメニューボタン（固定） -->
-  <button class="menu-btn" onclick="openMenu()">☰</button>
+<body id="top">
 
   <!-- ハンバーガーメニュー -->
-  <nav id="menu">
-    <span class="close-btn" onclick="closeMenu()">×</span>
-    <a href="kikaku.png">企画内容</a>
-    <a href="#">アクセス</a>
-    <a href="#">企画への声</a>
-  </nav>
-
-  <!-- コンテンツ -->
-  <div class="content">
-    <h1>クラブ＆バー</h1>
-
-    <!-- ダーツメーター -->
-    <div class="dart-container">
-      <!-- 常に表示する文字（やや混雑・満員・予約不要）-->
-      <span class="dart-label" id="label-yaya">やや混雑</span>
-      <span class="dart-label" id="label-manin">満員</span>
-      <span class="dart-label" id="label-yoyaku">予約不要</span>
-
-      <!-- ダーツバレル -->
-      <img src="dart.png" id="dart" alt="混雑度">
-    </div>
-
-    <button class="reserve-btn">予約する</button>
-    <p class="location">@4-3</p>
-
-    <!-- 区切り線 -->
-    <hr class="divider">
-
-    <!-- ランキング・ゲーム -->
-    <section class="game-section">
-      <div class="ranking">
-        <h2>ランキング</h2>
-        <ol>
-          <li>ユーザーA</li>
-          <li>ユーザーB</li>
-          <li>ユーザーC</li>
-        </ol>
-      </div>
-      <button class="game-btn">ゲームへ</button>
-    </section>
-
-    <!-- ニュース -->
-    <section class="news">
-      <h2>ニュース</h2>
-      <p>新しいイベントがスタートします！ぜひご参加ください。</p>
-    </section>
+  <div class="hamburger-container" onclick="openMenu()">
+    <div class="line1"></div>
+    <div class="line2"></div>
+    <p class="menu-text">MENU</p>
   </div>
 
-  <!-- フッター -->
-  <footer>
-    <div>
-      <a href="kikaku.png">企画内容</a> | 
-      <a href="#">アクセス</a> | 
-      <a href="#">企画への声</a>
-    </div>
-    <p>営業時間: 10:00～17:00 @4-3</p>
-  </footer>
+  <!-- オーバーレイメニュー -->
+  <nav id="menu">
+    <span class="close-btn" onclick="closeMenu()">×</span>
+    <a href="#top" onclick="closeMenu()">TOP</a>
+    <a href="#about" onclick="closeMenu()">ABOUT</a>
+    <a href="#">ACCESS</a>
+  </nav>
 
-  <!-- JavaScript -->
+  <!-- 左上ロゴA -->
+  <img src="logoA.png" alt="Logo A" class="top-logo" />
+
+  <!-- スクロールされる画像 -->
+  <div class="scroll-container">
+    <div class="scroll-track">
+      <div class="scroll-item"><img src="scroll1.png" alt="1" /></div>
+      <div class="scroll-item"><img src="scroll2.png" alt="2" /></div>
+      <div class="scroll-item"><img src="scroll3.png" alt="3" /></div>
+      <div class="scroll-item"><img src="scroll4.png" alt="4" /></div>
+    </div>
+    <!-- ファーストビュー文字 -->
+    <p class="firstview-text">
+      ネオンが灯る、音と遊びのバー 「Bar KIKAK」<br>
+      4年3組に開店
+    </p>
+  </div>
+
+  <!-- ABOUT セクション -->
+  <section id="about" class="about-section">
+    <div class="about-inner">
+      <h2 class="about-en">ABOUT</h2>
+      <p class="about-lead">
+        会話、空間、<br class="sp-only">時の流れを愉しむ場所
+      </p>
+      <p class="about-desc">
+        4年3組に開店した「Bar KIKAK」。<br>
+        重厚感ある空間で、上質な娯楽と心地よい時間をお届けします。<br>
+        お一人でも、誰かとでも―。<br>
+        どのようなシーンでもご満足いただけるひとときをご提供いたします。
+      </p>
+    </div>
+  </section>
+
+  <!-- 整理券番号表示 -->
+  <div id="ticketDisplay">読み込み中…</div>
+
+  <!-- 中央ロゴB -->
+  <div class="logo"></div>
+
   <script>
     function openMenu() {
       document.getElementById('menu').style.display = 'flex';
@@ -287,26 +251,30 @@
     function closeMenu() {
       document.getElementById('menu').style.display = 'none';
     }
-
-    // ダーツバレルのみをランダムに回転させる
-    // (満員 = -45deg, やや混雑 = 0deg, 予約不要 = 45deg)
-    function setCrowdLevel() {
-      const dart = document.getElementById('dart');
-      const status = ['やや混雑','満員','予約不要'];
-      const randomStatus = status[Math.floor(Math.random()*3)];
-
-      if (randomStatus === 'やや混雑'){
-        dart.style.transform = 'translate(-50%, -50%) rotate(0deg)';
-      } else if (randomStatus === '満員'){
-        dart.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
-      } else if (randomStatus === '予約不要'){
-        dart.style.transform = 'translate(-50%, -50%) rotate(45deg)';
-      }
-    }
-
-    setCrowdLevel();
-    setInterval(setCrowdLevel, 5000);
   </script>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD61hQI08c8ZiIUs-HiRKLHVl3DeTaFmSA",
+      authDomain: "togensai-92cb8.firebaseapp.com",
+      databaseURL: "https://togensai-92cb8-default-rtdb.firebaseio.com",
+      projectId: "togensai-92cb8",
+      storageBucket: "togensai-92cb8.appspot.com",
+      messagingSenderId: "98670394706",
+      appId: "1:98670394706:web:b9f9ce966cbccf1f61ce8b"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    db.ref('currentNumber').on('value', snap => {
+      const num = snap.val();
+      document.getElementById('ticketDisplay').textContent =
+        num !== null
+          ? `ご案内番号：${num}`
+          : 'まだ番号が設定されていません';
+    });
+  </script>
 </body>
 </html>
